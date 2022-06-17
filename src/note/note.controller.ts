@@ -14,9 +14,9 @@ export class NoteController {
   */
   @UseGuards(JwtAuthGuard)
   @Post()
-  CreateNote(@Body() createNoteDto: CreateNoteDto, @Res() res: Response): void {
+  CreateNote(@Body() createNoteDto: CreateNoteDto, @Res() res: Response, @Request() req): void {
     try {
-      this.appService.Create(createNoteDto);
+      this.appService.create(createNoteDto, req.user.userId);
       res.status(HttpStatus.CREATED).send();
     }
     catch (e) {
@@ -29,9 +29,9 @@ export class NoteController {
   */
   @UseGuards(JwtAuthGuard)
   @Get()
-  async GetOneAsync(@Body() id: string, @Res() res: Response) {
+  async GetOneAsync(@Body() id: string, @Res() res: Response, @Request() req) {
     try {
-      const item = await this.appService.FindOneAsync(id["id"])
+      const item = await this.appService.findOneAsync(id["id"], req.user.userId)
       res.status(HttpStatus.OK).json(item);
     }
     catch(e) {
@@ -46,7 +46,7 @@ export class NoteController {
   @Get("all")
   async GetAllAsync(@Res() res: Response) {
     try {
-      const items = await this.appService.FindAll()
+      const items = await this.appService.findAllAsync()
       res.status(HttpStatus.OK).json(items);
     }
     catch(e) {
@@ -59,9 +59,9 @@ export class NoteController {
   */
   @UseGuards(JwtAuthGuard)
   @Delete()
-  async DeleteOneAsync(@Body() id: string, @Res() res: Response) {
+  async DeleteOneAsync(@Body() id: string, @Res() res: Response, @Request() req) {
     try {
-      await this.appService.RemoveAsync(id["id"]);
+      await this.appService.removeAsync(id["id"], req.user.userId);
       res.status(HttpStatus.OK).send();
     }
     catch (e) {

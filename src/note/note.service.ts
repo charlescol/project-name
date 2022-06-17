@@ -13,12 +13,12 @@ export class NoteService {
     private noteRepository : Repository<Note>
   ) {}
 
-  FindAll(): Promise<Note[]> {
-    return this.noteRepository.find();
+  async findAllAsync(): Promise<Note[]> {
+    return await this.noteRepository.find();
   }
 
-  Create(createNoteDto : CreateNoteDto) : Promise<Note>{
-    if(!Validation.CreateDtoValidator.IsAcceptable(createNoteDto)) {
+  create(createNoteDto : CreateNoteDto, userID:string) : Promise<Note>{
+    if(createNoteDto.author != userID || !Validation.CreateDtoValidator.IsAcceptable(createNoteDto)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - Dto');
       throw new NotAcceptableException(SharedBusinessErrors.InvalidItem);
     }
@@ -26,21 +26,26 @@ export class NoteService {
     return this.noteRepository.save(note);
   } 
 
-  async FindOneAsync(id: string): Promise<Note> {
+  async findOneAsync(id: string, userID:string): Promise<Note> {
     if(!Validation.UUIDValidator.IsAcceptable(id)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - id');
       throw new NotAcceptableException(SharedBusinessErrors.InvalidItem);
     }
     const note =  await this.noteRepository.createQueryBuilder().whereInIds(id).getOne();
     if(!note) throw new NotFoundException();
+    if(note.author != userID) {
+      Logger.error("Invalid Author ID");
+      throw new NotAcceptableException();
+    } 
     return note;
   }
 
-  async RemoveAsync(id: string): Promise<DeleteResult> {
+  async removeAsync(id: string, userID:string): Promise<DeleteResult> {
     if(!Validation.UUIDValidator.IsAcceptable(id)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - id');
       throw new NotAcceptableException(SharedBusinessErrors.InvalidItem);
     }
+    await this.findOneAsync(id, userID);
     const result = await this.noteRepository.delete(id);
     if (!result.affected) throw new NotFoundException();
     return result;
