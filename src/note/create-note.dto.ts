@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateNoteDto {
-    @ApiProperty({description : 'Date of creation'})
+    @ApiProperty({description : 'Date of creation', example:'2001-09-28'})
     readonly date: string;
     @ApiProperty({description : 'Version of the object, 5 digits', example:'01.02'})
     readonly version: string;
