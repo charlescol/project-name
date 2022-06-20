@@ -13,10 +13,23 @@ export class NoteService {
     private noteRepository : Repository<Note>
   ) {}
 
+    /* Find All Items
+    INPUT : 
+      void
+    OUPUT : 
+      Note[] array
+  */
+
   async findAllAsync(): Promise<Note[]> {
     return await this.noteRepository.find();
   }
-
+  /* Create an Element with a DTO and the user id.
+    INPUT : 
+      id : UUID of the item
+      userID : author of the item
+    OUPUT : 
+      Note object
+  */
   create(createNoteDto : CreateNoteDto, userID:string) : Promise<Note>{
     if(createNoteDto.author != userID || !Validation.CreateDtoValidator.IsAcceptable(createNoteDto)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - Dto');
@@ -26,6 +39,13 @@ export class NoteService {
     return this.noteRepository.save(note);
   } 
 
+  /* Find an element by its it in the database. An exception is raised if element is empty or author not correspound.
+    INPUT : 
+      id : UUID of the item
+      userID : author of the item
+    OUPUT : 
+      Note object
+  */
   async findOneAsync(id: string, userID:string): Promise<Note> {
     if(!Validation.UUIDValidator.IsAcceptable(id)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - id');
@@ -39,7 +59,13 @@ export class NoteService {
     } 
     return note;
   }
-
+  /* Remove an Element with a DTO and the user id. An exception is raised if element is empty or author not correspound.
+    INPUT : 
+      id : UUID of the item
+      userID : author of the item
+    OUPUT : 
+      Note object
+  */
   async removeAsync(id: string, userID:string): Promise<DeleteResult> {
     if(!Validation.UUIDValidator.IsAcceptable(id)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - id');

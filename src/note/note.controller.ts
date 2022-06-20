@@ -3,7 +3,7 @@ import { NoteService } from './note.service';
 import { CreateNoteDto } from './create-note.dto';
 import  { Response } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ApiHeader } from '@nestjs/swagger';
+import { ApiExtraModels, ApiHeader } from '@nestjs/swagger';
 
 @ApiHeader({
   name: 'Bearer',
