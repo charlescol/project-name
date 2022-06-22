@@ -1,4 +1,3 @@
-import { validate as uuidValidate } from 'uuid'
 import { CreateNoteDto } from './create-note.dto';
 
 export namespace Validation {
@@ -13,7 +12,7 @@ export namespace Validation {
   @staticImplements<IStringValidation>()
   export class UUIDValidator {
     static IsAcceptable(id: string): boolean {
-      return uuidValidate(id);
+      return true; //uuidValidate(id);
     }
   }
 

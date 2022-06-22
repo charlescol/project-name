@@ -15,14 +15,14 @@ export class NoteController {
 
   /* Function to create new notes
      Input : createNoteDto : notes to add
-     Ouput : (HTTP 200 OK)
+     Ouput : (HTTP 201 CREATED)
   */
   @UseGuards(JwtAuthGuard)
   @Post()
-  CreateNote(@Body() createNoteDto: CreateNoteDto, @Res() res: Response, @Request() req): void {
+  async createNoteAsync(@Body() createNoteDto: CreateNoteDto, @Res() res: Response, @Request() req): Promise<void> {
     try {
-      this.appService.create(createNoteDto, req.user.userId);
-      res.status(HttpStatus.CREATED).send();
+      const item = await this.appService.createAsync(createNoteDto, req.user.userId);
+      res.status(HttpStatus.CREATED).json(item);
     }
     catch (e) {
       this._catchError(e, res);
@@ -34,7 +34,7 @@ export class NoteController {
   */
   @UseGuards(JwtAuthGuard)
   @Get()
-  async GetOneAsync(@Body() id: string, @Res() res: Response, @Request() req) {
+  async getOneAsync(@Body() id: string, @Res() res: Response, @Request() req) {
     try {
       const item = await this.appService.findOneAsync(id["id"], req.user.userId)
       res.status(HttpStatus.OK).json(item);
@@ -49,7 +49,7 @@ export class NoteController {
   */
   @UseGuards(JwtAuthGuard)
   @Get("all")
-  async GetAllAsync(@Res() res: Response) {
+  async getAllAsync(@Res() res: Response) {
     try {
       const items = await this.appService.findAllAsync()
       res.status(HttpStatus.OK).json(items);
@@ -64,7 +64,7 @@ export class NoteController {
   */
   @UseGuards(JwtAuthGuard)
   @Delete()
-  async DeleteOneAsync(@Body() id: string, @Res() res: Response, @Request() req) {
+  async deleteOneAsync(@Body() id: string, @Res() res: Response, @Request() req) {
     try {
       await this.appService.removeAsync(id["id"], req.user.userId);
       res.status(HttpStatus.OK).send();
@@ -79,7 +79,7 @@ export class NoteController {
   */
   private _catchError(e, res) : void {
     switch (true) {
-      case (e instanceof NotAcceptableException|| e instanceof NotFoundException): {
+      case (e instanceof NotAcceptableException|| e instanceof NotFoundException): { 
         res.status(HttpStatus.BAD_REQUEST).send();
         break;
       }

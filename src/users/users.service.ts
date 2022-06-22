@@ -1,11 +1,11 @@
 import { Injectable, Logger, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { jwtConstants } from 'src/auth/constant';
+import { jwtConstants } from '../auth/constant';
 import { Repository } from 'typeorm';
 import { CreateUsereDto } from './create-user.dto';
 import { User } from './users.entity';
-import * as bcrypt from 'bcrypt';
-import { SharedBusinessErrors } from 'src/shared/shared.business-errors';
+import * as bcrypt from 'bcryptjs';
+import { SharedBusinessErrors } from '../shared/shared.business-errors';
 
 @Injectable()
 export class UsersService {

@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { User } from './users.entity';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -6,7 +7,13 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+      providers: [{
+        provide: UsersService,
+        useFactory: () => ({
+          findOneAsync: jest.fn<Promise<User>, []>(async () => null),
+          createAsync :  jest.fn<Promise<User>, []>(async () => null)
+        }),
+      }],
     }).compile();
 
     service = module.get<UsersService>(UsersService);

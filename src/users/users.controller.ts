@@ -1,4 +1,4 @@
-import {  Controller, Post, Res, Body, HttpStatus, NotAcceptableException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {  Controller, Post, Res, Body, HttpStatus, NotAcceptableException, NotFoundException, UnauthorizedException, Logger } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUsereDto } from './create-user.dto';
 import  { Response } from 'express'
@@ -10,15 +10,15 @@ export class UsersController {
   @Post('user')
   async createUserAsync(@Body() createUsereDto: CreateUsereDto, @Res() res: Response): Promise<void> {
     try {
-      await this.appService.createAsync(createUsereDto);
-      res.status(HttpStatus.CREATED).send();
+      const {password, ...result} = await this.appService.createAsync(createUsereDto);
+      res.status(HttpStatus.CREATED).json(result);
     }
     catch (e) {
         this._catchError(e, res);
     }
   }
 
-  private _catchError(e, res) {
+  private _catchError(e , res) {
     switch (true) {
       case (e instanceof NotAcceptableException || e instanceof NotFoundException): {
         res.status(HttpStatus.BAD_REQUEST).send();
@@ -29,6 +29,7 @@ export class UsersController {
         break;
       }
       default : {
+        Logger.error(e);
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
       }
     }

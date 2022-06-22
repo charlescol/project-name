@@ -3,7 +3,7 @@ import { DeleteResult, IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note } from './note.entity';
 import { CreateNoteDto } from './create-note.dto';
-import { SharedBusinessErrors } from 'src/shared/shared.business-errors';
+import { SharedBusinessErrors } from '../shared/shared.business-errors';
 import { Validation } from './note.validator';
 
 @Injectable()
@@ -30,7 +30,7 @@ export class NoteService {
     OUPUT : 
       Note object
   */
-  create(createNoteDto : CreateNoteDto, userID:string) : Promise<Note>{
+  createAsync(createNoteDto : CreateNoteDto, userID:string) : Promise<Note>{
     if(createNoteDto.author != userID || !Validation.CreateDtoValidator.IsAcceptable(createNoteDto)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - Dto');
       throw new NotAcceptableException(SharedBusinessErrors.InvalidItem);
@@ -39,7 +39,7 @@ export class NoteService {
     return this.noteRepository.save(note);
   } 
 
-  /* Find an element by its it in the database. An exception is raised if element is empty or author not correspound.
+  /* Find an element by its id in the database. An exception is raised if an element is empty or the author not correspounds.
     INPUT : 
       id : UUID of the item
       userID : author of the item

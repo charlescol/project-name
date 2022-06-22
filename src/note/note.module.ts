@@ -10,6 +10,6 @@ import { NoteService } from './note.service';
 @Module({
     imports:[TypeOrmModule.forFeature([Note]), AuthModule],
     controllers: [NoteController],
-    providers : [NoteService]
+    providers : [NoteService, ]
 })
 export class NoteModule {}
