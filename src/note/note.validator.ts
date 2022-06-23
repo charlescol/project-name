@@ -39,8 +39,7 @@ export namespace Validation {
 
   export class CreateDtoValidator {
     static IsAcceptable(dto: CreateNoteDto): boolean {
-      return dto && UUIDValidator.IsAcceptable(dto.author) && DateValidator.IsAcceptable(dto.date) 
-      && VersionValidator.IsAcceptable(dto.version) && TitleValidator.IsAcceptable(dto.title);
+      return dto && DateValidator.IsAcceptable(dto.date) && TitleValidator.IsAcceptable(dto.title);
     }
   }
 

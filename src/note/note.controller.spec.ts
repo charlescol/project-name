@@ -67,23 +67,23 @@ describe('NoteController', () => {
 //     });
 //   });
 
-  describe('getOneAsync', () => {
+  // describe('getOneAsync', () => {
 
-    it('should return a note', async () => {
-        const result = [];
-        var response = httpMocks.createResponse();
-        var req = httpMocks.createRequest({
-            params: {
-                id: 42
-              }
-        });
+  //   it('should return a note', async () => {
+  //       const result = [];
+  //       var response = httpMocks.createResponse();
+  //       var req = httpMocks.createRequest({
+  //           params: {
+  //               id: 42
+  //             }
+  //       });
 
-        let note = createRandomNote();
-        let dto = new CreateNoteDto(note.date, note.version, note.author, note.title, note.content);
+  //       let note = createRandomNote();
+  //       let dto = new CreateNoteDto(note.date, note.version, note.author, note.title, note.content);
 
-        noteController.getOneAsync(note.id, response, req);
-        expect(noteController).toBeDefined();
-        expect(noteService.findOneAsync).toHaveBeenCalledWith(note.id);
-    });
-  });
+  //       noteController.getOneAsync(note.id, response, req);
+  //       expect(noteController).toBeDefined();
+  //       expect(noteService.findOneAsync).toHaveBeenCalledWith(note.id);
+  //   });
+  // });
 })});

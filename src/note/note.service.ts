@@ -5,6 +5,7 @@ import { Note } from './note.entity';
 import { CreateNoteDto } from './create-note.dto';
 import { SharedBusinessErrors } from '../shared/shared.business-errors';
 import { Validation } from './note.validator';
+import { Constants } from './constant';
 
 @Injectable()
 export class NoteService {
@@ -31,11 +32,13 @@ export class NoteService {
       Note object
   */
   createAsync(createNoteDto : CreateNoteDto, userID:string) : Promise<Note>{
-    if(createNoteDto.author != userID || !Validation.CreateDtoValidator.IsAcceptable(createNoteDto)) {
+
+    let dto = {author : userID, version : Constants.version,  ...createNoteDto}
+    if(!Validation.CreateDtoValidator.IsAcceptable(dto)) {
       Logger.error(SharedBusinessErrors.InvalidItem, 'NoteService - Dto');
       throw new NotAcceptableException(SharedBusinessErrors.InvalidItem);
     }
-    const note = this.noteRepository.create(createNoteDto)
+    const note = this.noteRepository.create(dto)
     return this.noteRepository.save(note);
   } 
 
